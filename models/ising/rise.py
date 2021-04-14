@@ -1,6 +1,6 @@
 import numpy as np
 from numba import jit, prange
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 
 @jit(nopython=True, parallel=True)
 def llk(node, sample, current_params):

@@ -45,9 +45,6 @@ class graphical_model(object):
                 prod_ = prod_ev(self.messages[ii])
             elif decode_type == "MSA":
                 sum_ = sum_ev(self.messages[ii])
-                #if ii == 0:
-                #    print("sum")
-                #    print(sum_)
             if not(np.isnan(sample[ii])):
                 j = np.argmax(node.values == sample[ii])
                 if decode_type == "SPA" or decode_type == "MPA":
@@ -57,8 +54,6 @@ class graphical_model(object):
                         message = self.log_inter[ii][i, :, j] + sum_[i, j]
                         new_messages[ne.label][int(self.register_[ne.label, node.label])] = message - log_sum_exp(message)
                     elif decode_type == "SPA" or decode_type == "MPA":
-                        #if ne.label == 0:
-                        #    print(self.register_[ne.label, node.label])
                         new_messages[ne.label][int(self.register_[ne.label, node.label])] = message[i] / np.sum(message[i])
             else:
                 for i, ne in enumerate(node.neighbours):
@@ -73,15 +68,10 @@ class graphical_model(object):
                     if decode_type == "SPA" or decode_type == "MPA":
                         new_messages[ne.label][int(self.register_[ne.label, node.label])] = message / np.sum(message)
                     elif decode_type == "MSA":
-                        #if ne.label == 0:
-                        #    print(self.register_[ne.label, node.label])
                         new_messages[ne.label][int(self.register_[ne.label, node.label])] = message - log_sum_exp(message)
 
         change = np.array([not(np.allclose(new_messages[i], self.messages[i])) for i in range(len(self.nodes))]).any()
         self.messages = new_messages
-        #print("message")
-        #print(self.messages[0])
-        #print(self.messages[0])
         return change
 
     def update_distrib(self, sample, decode_type="SPA"):
